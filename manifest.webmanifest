@@ -1,0 +1,22 @@
+{
+  "name": "Remember \u2014 Your personal memory diary",
+  "short_name": "Remember",
+  "description": "A private, local-only memory diary and reminder app.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f8f3",
+  "theme_color": "#e7ede2",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "lifestyle",
+    "productivity"
+  ]
+}

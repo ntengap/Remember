@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e7ede2">
+  <meta name="description" content="Remember — your private personal memory diary.">
+  <title>Remember — Your personal memory diary</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" data-page="home" aria-label="Remember home">
+        <span class="brand-mark">✳</span>
+        <span><strong>Remember</strong><small>Your personal memory diary</small></span>
+      </a>
+      <div class="top-actions">
+        <span class="privacy-pill"><span class="dot"></span> On this device</span>
+        <button class="icon-button" id="installBtn" hidden title="Install Remember" aria-label="Install Remember">⇩</button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="page active" id="page-home">
+        <div class="hero">
+          <div class="eyebrow">YOUR PRIVATE MEMORY SPACE</div>
+          <h1>Let's get it<br>out of your head.</h1>
+          <p>Your important details, life changes and recurring responsibilities — kept together, on your device.</p>
+          <button class="primary large" data-page="diary">＋ Tell me about your day <span>→</span></button>
+        </div>
+        <div class="stat-grid">
+          <article class="stat-card"><span class="stat-icon">⌖</span><strong id="statLocations">0</strong><span>Location records</span></article>
+          <article class="stat-card"><span class="stat-icon">↻</span><strong id="statChanges">0</strong><span>Changes & events</span></article>
+          <article class="stat-card"><span class="stat-icon">◎</span><strong id="statAccounts">0</strong><span>Account notes</span></article>
+          <article class="stat-card"><span class="stat-icon">▦</span><strong id="statReminders">0</strong><span>Open reminders</span></article>
+        </div>
+        <div class="section-heading"><div><div class="eyebrow">AT A GLANCE</div><h2>Worth remembering</h2></div><button class="text-button" data-page="memory">View memory →</button></div>
+        <div class="panel" id="recentMemories"></div>
+        <div class="section-heading"><div><div class="eyebrow">COMING UP</div><h2>Next reminders</h2></div><button class="text-button" data-page="reminders">All reminders →</button></div>
+        <div class="panel" id="upcomingReminders"></div>
+      </section>
+
+      <section class="page" id="page-diary">
+        <div class="page-intro"><div class="eyebrow">DAILY CHECK-IN</div><h1>What happened today?</h1><p>Write naturally. Remember will help you turn your note into useful records.</p></div>
+        <div class="chat-panel">
+          <div class="assistant-bubble"><span class="assistant-avatar">✳</span><div><strong>Remember</strong><p>Anything change today? Did you move something important, create an account, make a decision, or do something you'll need to remember later?</p></div></div>
+          <form id="diaryForm">
+            <label for="diaryText">Your day, in your own words</label>
+            <textarea id="diaryText" rows="5" placeholder="I moved my passport to the office drawer, signed up for a website, and changed my water filter…" required></textarea>
+            <div class="form-hint">You can include more than one thing. Don't enter passwords, PINs or recovery codes.</div>
+            <button class="primary" type="submit">Organize my note <span>→</span></button>
+          </form>
+        </div>
+        <div id="draftArea" class="draft-area" hidden></div>
+        <div class="panel soft-panel"><strong>How it works</strong><p>In this first version, note organization runs locally in your browser using simple keyword suggestions. Nothing is sent to a server. Review and correct every suggestion before saving.</p></div>
+      </section>
+
+      <section class="page" id="page-memory">
+        <div class="page-intro"><div class="eyebrow">YOUR PERSONAL ARCHIVE</div><h1>Find your memory.</h1><p>Search your saved details, locations and life events.</p></div>
+        <div class="search-wrap"><span>⌕</span><input id="memorySearch" type="search" placeholder="Try “passport”, “PIN”, “website”…" aria-label="Search memories"></div>
+        <div class="filter-row" id="memoryFilters">
+          <button class="filter active" data-filter="All">All</button><button class="filter" data-filter="Location">Locations</button><button class="filter" data-filter="Change">Changes</button><button class="filter" data-filter="Account">Accounts</button><button class="filter" data-filter="General">Other</button>
+        </div>
+        <div id="memoryList" class="stack"></div>
+        <button class="secondary full-width" data-page="diary">＋ Add from diary</button>
+      </section>
+
+      <section class="page" id="page-record">
+        <button class="back-button" data-page="memory">← Back to memory</button>
+        <div id="recordDetail"></div>
+      </section>
+
+      <section class="page" id="page-reminders">
+        <div class="page-intro"><div class="eyebrow">RECURRING MEMORY</div><h1>Stay ahead of it.</h1><p>Choose the date, set the rhythm, and keep track of what you've done.</p></div>
+        <div class="panel">
+          <h2 class="form-title">Add a reminder</h2>
+          <form id="reminderForm" class="form-stack">
+            <div><label for="reminderTitle">What do you need to remember?</label><input id="reminderTitle" required maxlength="120" placeholder="e.g. Replace water filter"></div>
+            <div><label for="reminderDate">First due date</label><input id="reminderDate" type="date" required></div>
+            <div><label for="reminderInterval">Repeat interval</label><select id="reminderInterval"><option value="none">One time only</option><option value="weekly">Every week</option><option value="monthly">Every month</option><option value="quarterly" selected>Every 3 months</option><option value="halfyear">Every 6 months</option><option value="yearly">Every year</option></select></div>
+            <div class="next-date" id="nextDatePreview">Choose a date to preview the next occurrence.</div>
+            <button class="primary" type="submit">Save reminder <span>→</span></button>
+          </form>
+        </div>
+        <div class="filter-row" id="reminderFilters"><button class="filter active" data-filter="open">Open</button><button class="filter" data-filter="completed">Completed</button><button class="filter" data-filter="all">All</button></div>
+        <div id="reminderList" class="stack"></div>
+      </section>
+
+      <section class="page" id="page-settings">
+        <div class="page-intro"><div class="eyebrow">YOUR DEVICE, YOUR DATA</div><h1>Privacy & settings.</h1><p>Remember stores your records locally in this browser on this device.</p></div>
+        <div class="panel settings-panel">
+          <div class="settings-row"><span class="settings-icon">◈</span><div><strong>Local-only storage</strong><p>No account or cloud sync. Your data stays in this browser's local storage.</p></div><span class="status-tag">Enabled</span></div>
+          <div class="settings-row"><span class="settings-icon">⇧</span><div><strong>Export your memories</strong><p>Download a JSON backup that you can keep somewhere safe.</p></div><button class="secondary small" id="exportBtn">Export</button></div>
+          <div class="settings-row"><span class="settings-icon">⇩</span><div><strong>Restore a backup</strong><p>Import a Remember JSON export on this device.</p></div><button class="secondary small" id="importBtn">Import</button><input id="importFile" type="file" accept="application/json,.json" hidden></div>
+          <div class="settings-row danger-row"><span class="settings-icon">×</span><div><strong>Delete all local data</strong><p>Permanently clear memories and reminders from this browser.</p></div><button class="danger small" id="clearBtn">Delete</button></div>
+        </div>
+        <div class="panel soft-panel"><strong>Important to know</strong><p>Local-only is not the same as encrypted storage. Anyone who can access your unlocked device or browser profile may be able to access this app's data. Avoid storing passwords, card PINs, recovery codes or full identity-document numbers.</p><p>Use HTTPS when hosting the app and keep exported backups protected. Clearing browser data may erase your records unless you have an export.</p></div>
+        <div class="about">Remember · Version 0.1.0 · Private by design</div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="nav-item active" data-page="home"><span>⌂</span><small>Home</small></button>
+      <button class="nav-item" data-page="diary"><span>▤</span><small>Diary</small></button>
+      <button class="nav-item" data-page="memory"><span>⌕</span><small>Memory</small></button>
+      <button class="nav-item" data-page="reminders"><span>▦</span><small>Reminders</small></button>
+      <button class="nav-item" data-page="settings"><span>⚙</span><small>Settings</small></button>
+    </nav>
+  </div>
+  <div id="toast" role="status" aria-live="polite" class="toast"></div>
+  <dialog id="confirmDialog" class="dialog"><form method="dialog"><h2 id="dialogTitle">Are you sure?</h2><p id="dialogMessage"></p><div class="dialog-actions"><button class="secondary" value="cancel">Cancel</button><button class="danger" id="dialogConfirm" value="confirm">Continue</button></div></form></dialog>
+  <script src="./app.js"></script>
+</body>
+</html>
