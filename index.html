@@ -11,7 +11,26 @@
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <div class="app-shell">
+  <section id="securityGate" class="security-gate" aria-labelledby="securityTitle">
+    <div class="security-card">
+      <div class="security-logo">✳</div>
+      <div class="eyebrow">YOUR PRIVATE MEMORY SPACE</div>
+      <h1 id="securityTitle">Unlock Remember</h1>
+      <p id="securityIntro">Enter your passphrase to access your encrypted memories.</p>
+      <form id="securityForm">
+        <label for="securityPass">Passphrase</label>
+        <input id="securityPass" type="password" required minlength="10" autocomplete="current-password" placeholder="At least 10 characters">
+        <div id="confirmPassWrap" hidden>
+          <label for="confirmPass">Confirm passphrase</label>
+          <input id="confirmPass" type="password" autocomplete="new-password" placeholder="Enter it again">
+        </div>
+        <p id="securityError" class="security-error" role="alert" hidden></p>
+        <button class="primary full-width" id="securitySubmit" type="submit">Unlock Remember →</button>
+      </form>
+      <p class="security-note">Your passphrase stays on this device. If you forget it, your encrypted records cannot be recovered without a separate backup.</p>
+    </div>
+  </section>
+  <div class="app-shell" id="appShell" hidden>
     <header class="topbar">
       <a class="brand" href="#" data-page="home" aria-label="Remember home">
         <span class="brand-mark">✳</span>
@@ -92,12 +111,13 @@
       <section class="page" id="page-settings">
         <div class="page-intro"><div class="eyebrow">YOUR DEVICE, YOUR DATA</div><h1>Privacy & settings.</h1><p>Remember stores your records locally in this browser on this device.</p></div>
         <div class="panel settings-panel">
-          <div class="settings-row"><span class="settings-icon">◈</span><div><strong>Local-only storage</strong><p>No account or cloud sync. Your data stays in this browser's local storage.</p></div><span class="status-tag">Enabled</span></div>
+          <div class="settings-row"><span class="settings-icon">◈</span><div><strong>Encrypted local storage</strong><p>Records are encrypted on this device and unlocked using your passphrase.</p></div><span class="status-tag">Enabled</span></div>
+          <div class="settings-row"><span class="settings-icon">⌑</span><div><strong>Lock Remember now</strong><p>Immediately hide the app and discard its in-memory key.</p></div><button class="secondary small" id="lockNowBtn">Lock now</button></div>
           <div class="settings-row"><span class="settings-icon">⇧</span><div><strong>Export your memories</strong><p>Download a JSON backup that you can keep somewhere safe.</p></div><button class="secondary small" id="exportBtn">Export</button></div>
           <div class="settings-row"><span class="settings-icon">⇩</span><div><strong>Restore a backup</strong><p>Import a Remember JSON export on this device.</p></div><button class="secondary small" id="importBtn">Import</button><input id="importFile" type="file" accept="application/json,.json" hidden></div>
           <div class="settings-row danger-row"><span class="settings-icon">×</span><div><strong>Delete all local data</strong><p>Permanently clear memories and reminders from this browser.</p></div><button class="danger small" id="clearBtn">Delete</button></div>
         </div>
-        <div class="panel soft-panel"><strong>Important to know</strong><p>Local-only is not the same as encrypted storage. Anyone who can access your unlocked device or browser profile may be able to access this app's data. Avoid storing passwords, card PINs, recovery codes or full identity-document numbers.</p><p>Use HTTPS when hosting the app and keep exported backups protected. Clearing browser data may erase your records unless you have an export.</p></div>
+        <div class="panel soft-panel"><strong>Important to know</strong><p>Your records are encrypted while locked, but someone with access to your unlocked app or a compromised device may still see them. Avoid storing passwords, card PINs, recovery codes or full identity-document numbers.</p><p>JSON exports are NOT encrypted. Use HTTPS when hosting the app and keep exported backups protected. Clearing browser data may erase your records unless you have an export.</p></div>
         <div class="about">Remember · Version 0.1.0 · Private by design</div>
       </section>
     </main>
@@ -112,6 +132,6 @@
   </div>
   <div id="toast" role="status" aria-live="polite" class="toast"></div>
   <dialog id="confirmDialog" class="dialog"><form method="dialog"><h2 id="dialogTitle">Are you sure?</h2><p id="dialogMessage"></p><div class="dialog-actions"><button class="secondary" value="cancel">Cancel</button><button class="danger" id="dialogConfirm" value="confirm">Continue</button></div></form></dialog>
-  <script src="./app.js"></script>
+  <script src="./security.js"></script>
 </body>
 </html>

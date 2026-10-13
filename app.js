@@ -1,6 +1,5 @@
 (() => {
   "use strict";
-  const DB_KEY = "remember-local-v1";
   const $ = (s, root=document) => root.querySelector(s);
   const $$ = (s, root=document) => [...root.querySelectorAll(s)];
   const today = () => {
@@ -15,18 +14,18 @@
   let pendingDrafts = [];
 
   function loadState() {
-    try {
-      const raw = localStorage.getItem(DB_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        return {records:Array.isArray(parsed.records)?parsed.records:[], reminders:Array.isArray(parsed.reminders)?parsed.reminders:[], diaries:Array.isArray(parsed.diaries)?parsed.diaries:[]};
-      }
-    } catch (e) { console.warn("Remember data could not be read", e); }
-    return {records:[], reminders:[], diaries:[]};
+    const data = window.rememberState;
+    if (!data) throw new Error("Encrypted vault is locked.");
+    return {
+      records: Array.isArray(data.records) ? data.records : [],
+      reminders: Array.isArray(data.reminders) ? data.reminders : [],
+      diaries: Array.isArray(data.diaries) ? data.diaries : []
+    };
   }
   function persist() {
-    try { localStorage.setItem(DB_KEY, JSON.stringify(state)); return true; }
-    catch (e) { toast("Could not save. Browser storage may be full or disabled."); return false; }
+    window.rememberPersist(state).catch(() => {
+      toast("Encrypted save failed. Keep Remember open and retry.");
+    });
   }
   function escapeHtml(s) {
     return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -171,9 +170,10 @@
     const btn=$("#dialogConfirm");const handler=e=>{if(e.submitter?.value==="confirm")onConfirm();};dlg.querySelector("form").addEventListener("submit",handler,{once:true});dlg.showModal();
   }
   $("#clearBtn").addEventListener("click",()=>confirmAction("Delete all Remember data?","This permanently deletes all memories, diary index entries and reminders from this browser. Export a backup first if you may need it.",()=>{state={records:[],reminders:[],diaries:[]};persist();renderHome();renderMemory();renderReminders();toast("All local Remember data deleted.");}));
+  $("#lockNowBtn").addEventListener("click", () => window.rememberLock());
   $("#exportBtn").addEventListener("click",()=>{
     const blob=new Blob([JSON.stringify({app:"Remember",version:1,exportedAt:new Date().toISOString(),...state},null,2)],{type:"application/json"});
-    const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`remember-backup-${today()}.json`;a.click();URL.revokeObjectURL(url);toast("Backup exported.");
+    const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`remember-backup-${today()}.json`;a.click();URL.revokeObjectURL(url);toast("Plaintext backup exported. Store it securely.");
   });
   $("#importBtn").addEventListener("click",()=>$("#importFile").click());
   $("#importFile").addEventListener("change",async e=>{
